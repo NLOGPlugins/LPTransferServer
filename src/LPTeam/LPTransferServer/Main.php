@@ -135,7 +135,7 @@ class Main extends PluginBase implements Listener {
   
   public function onInteract (PlayerInteractEvent $ev) {
   	$name = $ev->getPlayer()->getName();
-  	$sign = $ev->getBlock()->getLevel()->getTile($ev->getBlock()->asVector3());
+  	$sign = $ev->getBlock()->getLevel()->getTile($ev->getBlock());
   	if ($sign instanceof TileSign && isset($this->list[$name])) {
   		if (isset($this->yml[$this->asString($ev->getBlock()->asVector3())])) {
   			$ev->getPlayer()->sendMessage($this->tag . "서버이동 표지판은 수정하실 수 없습니다.");
