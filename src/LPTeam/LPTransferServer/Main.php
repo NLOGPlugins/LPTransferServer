@@ -70,7 +70,7 @@ class Main extends PluginBase implements Listener {
   
   /**
    * 커맨드의 label과 args에 공백을 정렬하는 소스입니다.
-   * - Made by 엔로그
+   * - Made by 엔로그 (nnnlog, NLOG)
    * 
    * @param string $label
    * @param array $args
@@ -136,7 +136,7 @@ class Main extends PluginBase implements Listener {
   public function onInteract (PlayerInteractEvent $ev) {
   	$name = $ev->getPlayer()->getName();
   	$sign = $ev->getBlock()->getLevel()->getTile($ev->getBlock()->asVector3());
-  	if ($sign instanceof TileSign && in_array($name, $this->list)) {
+  	if ($sign instanceof TileSign && isset($this->list[$name])) {
   		if (isset($this->yml[$this->asString($ev->getBlock()->asVector3())])) {
   			$ev->getPlayer()->sendMessage($this->tag . "서버이동 표지판은 수정하실 수 없습니다.");
   			return;
@@ -157,8 +157,8 @@ class Main extends PluginBase implements Listener {
   		return;
   	}
   	if (isset($this->yml[$this->asString($ev->getBlock()->asVector3())])) {
-  		$ip = explode(":", $this->list[$name])[0];
-  		$port = explode(":", $this->list[$name])[1];
+  		$ip = explode(":", $this->yml[$this->asString($ev->getBlock()->asVector3())])[0];
+  		$port = explode(":", $this->yml[$this->asString($ev->getBlock()->asVector3())])[1];
   		$ev->getPlayer()->sendMessage($this->tag . "서버를 이동하였습니다.");
   		$this->transferServer($ip, $port, $ev->getPlayer());
   		return;
@@ -210,7 +210,7 @@ class Main extends PluginBase implements Listener {
   			
   			$ip = $ipport[0];
   			$port = $ipport[1];
-  			if ($args[2] !== null) {
+  			if ($args[2] ?? null !== null) {
   				$player = $this->getServer()->getPlayer($args[2]);
   				if ($player instanceof Player) {
   					if ($player->isOnline()) {
@@ -231,7 +231,7 @@ class Main extends PluginBase implements Listener {
 			$this->transferServer($ip, $port, $sender);
   			break;
   		case "생성":
-  			if (in_array($name, $this->list)) {
+  			if (isset($this->list[$name])) {
   				$sender->sendMessage($this->tag . "이미 작업 중입니다.");
   				break;
   			}
@@ -247,7 +247,7 @@ class Main extends PluginBase implements Listener {
   			$sender->sendMessage($this->tag . "표지판을 터치하세요.");
   			break;
   		case "생성취소":
-  			if (!in_array($name, $this->list)) {
+  			if (isset($this->list[$name])) {
   				$sender->sendMessage($this->tag . "작업을 하고 있지 않습니다.");
   				break;
   			}
